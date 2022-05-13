@@ -39,8 +39,7 @@ public class Cuenta {
     if (cantidadDepositos() >= 3) { // uso una funcion auxiliar en vez de resolverlo de forma a.b().c().d() >= 3
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
-
-    new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
+    this.agregarMovimiento(LocalDate.now(), cuanto, true);
   }
   
   private double limite() {
@@ -59,12 +58,18 @@ public class Cuenta {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, límite: " + this.limite());
     }
-    new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
+
+    this.agregarMovimiento(LocalDate.now(), cuanto, false);
   } //sobrecargada, facilmente entran 2 funciones auxiliares para chequear que no se retire montos mayores al saldo o que se exceda el limite
 
+  private void actualizarSaldo(Movimiento mov) {
+	  saldo += mov.calcularValor();
+  }
+  
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
     Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
     movimientos.add(movimiento);
+    actualizarSaldo(movimiento);
   }
 
   public double getMontoExtraidoA(LocalDate fecha) {
