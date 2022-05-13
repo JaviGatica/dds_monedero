@@ -26,13 +26,17 @@ public class Cuenta {
   public void setMovimientos(List<Movimiento> movimientos) {
     this.movimientos = movimientos;
   }
+  
+  private long cantidadDepositos() {
+	  return getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count();
+  }
 
   public void poner(double cuanto) {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
 
-    if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
+    if (cantidadDepositos() >= 3) { // uso una funcion auxiliar en vez de resolverlo de forma a.b().c().d() >= 3
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
 
