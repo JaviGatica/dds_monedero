@@ -11,7 +11,8 @@ import java.util.List;
 
 public class Cuenta {
 
-  private double saldo = 0;
+	
+  private double saldo; //deberia hacerse en el constructor
   private List<Movimiento> movimientos = new ArrayList<>();
 
   public Cuenta() {
@@ -20,7 +21,7 @@ public class Cuenta {
 
   public Cuenta(double montoInicial) {
     saldo = montoInicial;
-  }
+  } //entiendo el punto de poder crear un monedero con un saldo inicial, pero en este caso siento que es mejor inicializarlo siempre en 0 y cargarle el monto a mano
 
   public void setMovimientos(List<Movimiento> movimientos) {
     this.movimientos = movimientos;
@@ -52,7 +53,7 @@ public class Cuenta {
           + " diarios, límite: " + limite);
     }
     new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
-  }
+  } //sobrecargada, facilmente entran 2 funciones auxiliares para chequear que no se retire montos mayores al saldo o que se exceda el limite emprolijar la funcion
 
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
     Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
