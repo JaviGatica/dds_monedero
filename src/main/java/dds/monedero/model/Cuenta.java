@@ -42,6 +42,11 @@ public class Cuenta {
 
     new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
   }
+  
+  private double limite() {
+	  double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
+	  return 1000 - montoExtraidoHoy;
+  }
 
   public void sacar(double cuanto) {
     if (cuanto <= 0) {
@@ -50,14 +55,12 @@ public class Cuenta {
     if (getSaldo() - cuanto < 0) {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
-    double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    double limite = 1000 - montoExtraidoHoy;
-    if (cuanto > limite) {
+    if (cuanto > this.limite()) { //uso una funcion auxiliar
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
-          + " diarios, límite: " + limite);
+          + " diarios, límite: " + this.limite());
     }
     new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
-  } //sobrecargada, facilmente entran 2 funciones auxiliares para chequear que no se retire montos mayores al saldo o que se exceda el limite emprolijar la funcion
+  } //sobrecargada, facilmente entran 2 funciones auxiliares para chequear que no se retire montos mayores al saldo o que se exceda el limite
 
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
     Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
